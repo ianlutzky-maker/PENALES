@@ -12,7 +12,10 @@ function fail(status, message) {
 }
 
 async function redis(...command) {
-  const { UPSTASH_REDIS_REST_URL: url, UPSTASH_REDIS_REST_TOKEN: token } = process.env;
+  const env = process.env;
+  const useUpstash = env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN;
+  const url = useUpstash ? env.UPSTASH_REDIS_REST_URL : env.KV_REST_API_URL;
+  const token = useUpstash ? env.UPSTASH_REDIS_REST_TOKEN : env.KV_REST_API_TOKEN;
   if (!url || !token) fail(503, 'El modo online todavía necesita una base de datos configurada.');
   const response = await fetch(url, {
     method: 'POST',
