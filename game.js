@@ -218,7 +218,13 @@ function render() {
   const panel = element('div', 'panel');
   let title;
 
-  if (phase === 'handoff') {
+  if (phase === 'online-wait') {
+    title = heading(panel, 'SALA PRIVADA', 'Jugada confirmada', 'El resultado se revela cuando confirman los dos.');
+    const status = element('p', 'subtitle', rivalStatus());
+    status.id = 'rival-status';
+    status.setAttribute('role', 'status');
+    panel.append(status);
+  } else if (phase === 'handoff') {
     panel.append(element('div', 'handoff-icon', '↔'));
     const keeperTurn = handoffTo === 'keep';
     title = heading(panel, 'CAMBIO DE MANOS', 'Pasale la compu a ' + players[keeperTurn ? 1 - kicker : kicker].name,
@@ -229,11 +235,19 @@ function render() {
     title = heading(panel, kicking ? '01 / EL TIRO' : '02 / LA ATAJADA',
       players[kicking ? kicker : 1 - kicker].name + (kicking ? ', te toca patear' : ', te toca atajar'),
       kicking ? 'Marcá el casillero al que querés apuntar.' : 'Marcá dónde ponés el guante y elegí si usás un láser.');
+    if (onlineState) {
+      const status = element('p', 'subtitle', rivalStatus());
+      status.id = 'rival-status';
+      status.setAttribute('role', 'status');
+      panel.append(status);
+    }
     panel.append(goalGrid(true, kicking ? '⚽' : '🧤'));
     if (!kicking) panel.append(laserPicker());
     const confirm = action(kicking ? 'Confirmar tiro' : 'Confirmar atajada', () => {
       if (selection === null) return;
-      if (kicking) {
+      if (onlineState) {
+        sendOnline('move', { cell: selection, laser }, confirm);
+      } else if (kicking) {
         shot = selection;
         handoff('keep');
       } else {
@@ -274,13 +288,13 @@ function render() {
       if (table.sudden && players.every(player => player.attempts.length === 5)) {
         panel.append(element('p', 'finish-note', 'Empate después de cinco tiros por lado. ¡Vamos a muerte súbita!'));
       }
-      panel.append(action('Siguiente penal', () => { kicker = 1 - kicker; shot = result = null; handoff('kick'); }));
+      panel.append(onlineState ? onlineAdvance('Siguiente penal') : action('Siguiente penal', () => { kicker = 1 - kicker; shot = result = null; handoff('kick'); }));
     }
   } else {
     panel.append(element('div', 'handoff-icon', '🏆'));
     title = heading(panel, 'FINAL DE LA TANDA', 'Ganó ' + players[table.winner].name,
       table.goals[table.winner] + ' a ' + table.goals[1 - table.winner] + ' en la tanda de penales.');
-    panel.append(action('Revancha', () => {
+    panel.append(onlineState ? onlineAdvance('Revancha') : action('Revancha', () => {
       first = 1 - first;
       start(players.map(player => player.name));
     }));
@@ -296,6 +310,7 @@ for (const input of playerInputs) {
 }
 document.querySelector('#setup').addEventListener('submit', event => {
   event.preventDefault();
+  if (onlineSession) return;
   for (const input of playerInputs) {
     if (!input.value.trim()) {
       input.setCustomValidity('Escribí un nombre.');

@@ -117,3 +117,10 @@ button.cell:hover { background-color: #285c42; }
 .flight-beam.green { background: #c3fb8e; color: #163a09; }
 .in-flight .result-marks { visibility: hidden; }
 .outside-call { margin: 16px 0 0; color: #ffcb9c; font-weight: 800; }
+
+#online-setup { border-top: 1px solid var(--line); margin-top: 25px; padding-top: 14px; }
+#online-setup h2 { margin: 0; font-size: 1.2rem; }
+#online-setup button { justify-content: center; }
+#leave-room { display: inline-block; margin-bottom: 12px; color: var(--lime); font-weight: 700; }
+#network-message { background: #263d30; border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; margin: 0 0 12px; }
+.invite-link { display: block; width: min(100%, 440px); margin-inline: auto; padding: 10px; border: 1px solid #587569; border-radius: 7px; color: var(--text); background: #0d1e17; }

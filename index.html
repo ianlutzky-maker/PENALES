@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="style.css">
   <script src="rules.js" defer></script>
   <script src="game.js" defer></script>
+  <script src="online.js" defer></script>
   <script src="music.js" defer></script>
 </head>
 <body>
@@ -24,6 +25,8 @@
     </div>
   </header>
   <main>
+    <a id="leave-room" href="./" hidden>Volver al inicio</a>
+    <p id="network-message" role="status" hidden></p>
     <section id="score" class="score" aria-label="Marcador e historial" hidden></section>
     <section id="stage" class="stage" aria-label="Juego">
       <div class="intro">
@@ -36,6 +39,12 @@
           <label for="player-2">Jugador 2</label>
           <input id="player-2" name="second" maxlength="24" placeholder="Nombre del jugador 2" required>
           <button class="primary" type="submit">Empezar tanda <span aria-hidden="true">→</span></button>
+        </form>
+        <form id="online-setup" hidden>
+          <h2 id="online-title">Jugá online</h2>
+          <label for="nickname">Tu nombre</label>
+          <input id="nickname" name="nickname" maxlength="24" placeholder="Escribí tu nombre" required>
+          <button class="primary" type="submit">Crear sala privada</button>
         </form>
       </div>
       <div class="intro-art" aria-hidden="true">
