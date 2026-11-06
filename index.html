@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Una tanda de penales para dos personas en la misma compu.">
+  <title>Penales · De a dos</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="rules.js" defer></script>
+  <script src="game.js" defer></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="brand"><span aria-hidden="true">⚽</span> PENALES<span class="dot">.</span></div>
+    <span class="edition">FÚTBOL LOCAL <span> / </span> 2 JUGADORES</span>
+  </header>
+  <main>
+    <section id="score" class="score" aria-label="Marcador e historial" hidden></section>
+    <section id="stage" class="stage" aria-label="Juego">
+      <div class="intro">
+        <p class="eyebrow">DOS JUGADORES · UNA COMPU</p>
+        <h1>La tanda<br>empieza acá<span>.</span></h1>
+        <p>Elegí dónde patear, pasale la compu a tu rival y descubran juntos qué pasó.</p>
+        <form id="setup">
+          <label for="player-1">Jugador 1 · Patea primero</label>
+          <input id="player-1" name="first" maxlength="24" placeholder="Nombre del jugador 1" required>
+          <label for="player-2">Jugador 2</label>
+          <input id="player-2" name="second" maxlength="24" placeholder="Nombre del jugador 2" required>
+          <button class="primary" type="submit">Empezar tanda <span aria-hidden="true">→</span></button>
+        </form>
+      </div>
+      <div class="intro-art" aria-hidden="true">
+        <div class="art-label">01 <span> / </span> EL ARCO</div>
+        <div class="goal art-goal"><span></span><span>⚽</span><span></span><span></span><span></span><span>🧤</span></div>
+        <div class="art-label art-bottom">IZQUIERDA <span> / </span> CENTRO <span> / </span> DERECHA</div>
+      </div>
+    </section>
+  </main>
+  <footer><span>PENALES DE ENTRECASA</span><span>HECHO PARA JUGAR DE A DOS</span></footer>
+</body>
+</html>
