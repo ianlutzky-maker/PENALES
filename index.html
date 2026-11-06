@@ -8,11 +8,20 @@
   <link rel="stylesheet" href="style.css">
   <script src="rules.js" defer></script>
   <script src="game.js" defer></script>
+  <script src="music.js" defer></script>
 </head>
 <body>
   <header class="masthead">
     <div class="brand"><span aria-hidden="true">⚽</span> PENALES<span class="dot">.</span></div>
-    <span class="edition">FÚTBOL LOCAL <span> / </span> 2 JUGADORES</span>
+    <div class="sound">
+      <label for="music">♫ Música</label>
+      <select id="music">
+        <option value="">Silencio</option>
+        <option value="0">Dale, dale</option>
+        <option value="1">Desde el tablón</option>
+        <option value="2">La vuelta olímpica</option>
+      </select>
+    </div>
   </header>
   <main>
     <section id="score" class="score" aria-label="Marcador e historial" hidden></section>

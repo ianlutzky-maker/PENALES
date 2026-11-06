@@ -111,6 +111,64 @@ function goalGrid(interactive, marker) {
   return grid;
 }
 
+function animateReveal(grid, kick) {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !grid.animate) return;
+
+  const frame = grid.getBoundingClientRect();
+  const point = index => {
+    const cell = grid.children[index].getBoundingClientRect();
+    return { x: cell.left - frame.left + cell.width / 2 - grid.clientLeft,
+      y: cell.top - frame.top + cell.height / 2 - grid.clientTop };
+  };
+  const aim = point(kick.shot);
+  const gloveAt = point(kick.glove);
+  const end = kick.final === null
+    ? { x: kick.outside === 'izquierda' ? -10 : grid.clientWidth + 10, y: aim.y }
+    : point(kick.final);
+  const caught = kick.outcome === 'Atajada';
+  const duration = 1250;
+  const position = ({ x, y }, scale, offset, opacity = 1) => ({
+    left: x + 'px', top: y + 'px', offset, opacity,
+    transform: 'translate(-50%, -50%) scale(' + scale + ')'
+  });
+
+  const ball = element('span', 'flight-ball', '⚽');
+  const glove = element('span', 'flight-glove', '🧤');
+  const replay = element('div', 'flight');
+  replay.setAttribute('aria-hidden', 'true');
+  replay.append(ball, glove);
+  grid.append(replay);
+  grid.classList.add('in-flight');
+
+  glove.animate([
+    position({ x: grid.clientWidth / 2, y: grid.clientHeight - 13 }, .85, 0),
+    position(gloveAt, 1, .47),
+    position(gloveAt, 1, .72),
+    position(gloveAt, caught ? 1.45 : 1, .84),
+    position(gloveAt, 1, 1)
+  ], { duration, fill: 'both' });
+
+  if (kick.laser !== 'none') {
+    const beam = element('span', 'flight-beam ' + kick.laser,
+      kick.laser === 'red' ? '←' : '→');
+    beam.style.left = aim.x + 'px';
+    beam.style.top = aim.y + 'px';
+    replay.append(beam);
+    beam.animate([{ opacity: 0 }, { opacity: 1, offset: .22 }, { opacity: 0 }],
+      { duration: 420, delay: 480, fill: 'both' });
+  }
+
+  ball.animate([
+    position({ x: grid.clientWidth / 2, y: grid.clientHeight - 3 }, 1.5, 0),
+    position(aim, .95, .46),
+    position(end, caught ? .7 : .9, .76),
+    position(end, kick.outcome === 'Gol' ? .55 : .75, 1, caught ? 1 : 0)
+  ], { duration, fill: 'both' }).finished.then(() => {
+    replay.remove();
+    grid.classList.remove('in-flight');
+  });
+}
+
 function laserPicker() {
   const field = element('fieldset', 'lasers');
   field.append(element('legend', '', 'Láser del arquero'));
@@ -193,6 +251,10 @@ function render() {
     title = heading(panel, '03 / LA REVELACIÓN', result.outcome + (result.outcome === 'Gol' ? '!' : ''),
       'Tiro de ' + players[kicker].name + ' · Arco de ' + players[1 - kicker].name);
     panel.append(goalGrid(false));
+    if (result.outcome === 'Afuera') {
+      panel.append(element('p', 'outside-call',
+        '¡Se te fue afuera por la ' + result.outside + '! Perdiste este penal.'));
+    }
     const details = element('dl', 'details');
     const end = result.final === null
       ? 'Afuera por la ' + result.outside + ' · ' + (result.shot < 3 ? 'fila de arriba' : 'fila de abajo')
@@ -224,6 +286,7 @@ function render() {
     }));
   }
   stage.append(panel);
+  if (phase === 'reveal') animateReveal(panel.querySelector('.goal'), result);
   title.focus({ preventScroll: true });
   window.scrollTo(0, 0);
 }

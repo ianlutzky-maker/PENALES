@@ -103,3 +103,17 @@ button.cell:hover { background-color: #285c42; }
   .edition, footer { font-size: .58rem; }
   .laser { flex-wrap: wrap; }
 }
+
+.sound { display: flex; align-items: center; gap: 8px; font-size: .82rem; font-weight: 750; }
+.sound label { color: var(--muted); }
+.sound select { background: #172e23; color: var(--text); border: 1px solid #587569; border-radius: 7px; padding: 6px; max-width: 40vw; }
+.reveal .goal { position: relative; }
+.flight { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+.flight-ball, .flight-glove, .flight-beam { position: absolute; line-height: 1; }
+.flight-ball, .flight-glove { font-size: clamp(24px, 5vw, 42px); filter: drop-shadow(0 3px 4px #0009); }
+.flight-ball { z-index: 2; }
+.flight-beam { z-index: 3; transform: translate(-50%, -115%); padding: 4px 9px; border-radius: 20px; font-weight: 900; }
+.flight-beam.red { background: #ffb0a3; color: #43120b; }
+.flight-beam.green { background: #c3fb8e; color: #163a09; }
+.in-flight .result-marks { visibility: hidden; }
+.outside-call { margin: 16px 0 0; color: #ffcb9c; font-weight: 800; }
